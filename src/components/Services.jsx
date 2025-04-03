@@ -4,9 +4,9 @@ import '../styles/services.css'; // Create this CSS file for service-specific st
 const Services = ({ id }) => {
   const services = [
     {
-      title: "Website Design & Development",
-      subtitle: "Full-Cycle Web Solutions: Design, Development, Delivery",
-      description: "I provide a seamless experience from initial design concepts to the final product. Whether you're launching a new business or revamping an existing site, I ensure pixel-perfect execution.",
+      title: "Crafting Digital Experiences",
+      subtitle: "End-to-End Web Solutions: Strategy, Design, and Development.",
+      description: "From concept to launch, I specialize in creating modern, responsive, and user-friendly websites tailored to your business needs. Whether you're starting fresh or enhancing an existing platform, I deliver solutions that drive results.",
       icon: "🛠️",
       linkText: "View projects →",
       link: "#projects"
