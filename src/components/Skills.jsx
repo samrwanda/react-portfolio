@@ -1,10 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { FaHtml5, FaCss3Alt, FaJs, FaReact, FaNodeJs } from 'react-icons/fa';
-import { SiPostgresql, SiFigma } from 'react-icons/si';  // Removed SiExpress import
+import { SiPostgresql, SiFigma } from 'react-icons/si';
 import '../styles/skills.css';
 
 const Skills = ({ id }) => {
   const skillsRef = useRef(null);
+  const observerRef = useRef(null);
+  
   const skills = [
     { name: "HTML5", icon: <FaHtml5 size={40} color="#E34F26" />, size: "large"},
     { name: "CSS", icon: <FaCss3Alt size={32} color="#1572B6" />, size: "medium-one" },
@@ -16,11 +18,10 @@ const Skills = ({ id }) => {
   ];
   
   useEffect(() => {
-    // Need to check if skillsRef.current exists
-    if (!skillsRef.current) return;
+    const currentRef = skillsRef.current;
+    if (!currentRef) return;
     
-    // Create intersection observer once the component mounts
-    const observer = new IntersectionObserver((entries) => {
+    observerRef.current = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('animate');
@@ -28,27 +29,24 @@ const Skills = ({ id }) => {
       });
     }, { threshold: 0.1 });
     
-    // Select all skill cards within this component
-    const skillCards = skillsRef.current.querySelectorAll('.skill-card');
+    const skillCards = currentRef.querySelectorAll('.skill-card');
     skillCards.forEach(card => {
-      observer.observe(card);
+      observerRef.current.observe(card);
     });
     
-    // Cleanup observer on component unmount
     return () => {
-      if (observer) {
-        // Explicit check if skillCards are still available
-        if (skillsRef.current) {
-          const skillCards = skillsRef.current.querySelectorAll('.skill-card');
+      if (observerRef.current) {
+        // Check if the ref still exists before trying to unobserve
+        if (currentRef) {
+          const skillCards = currentRef.querySelectorAll('.skill-card');
           skillCards.forEach(card => {
-            observer.unobserve(card);
+            observerRef.current.unobserve(card);
           });
-        } else {
-          observer.disconnect();
         }
+        observerRef.current.disconnect();
       }
     };
-  }, []); // Empty dependency array means this runs once on mount
+  }, []); // Empty dependency array is correct here
 
   return (
     <section id={id} className="skills-masonry" ref={skillsRef}>
