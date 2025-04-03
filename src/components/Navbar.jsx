@@ -7,21 +7,8 @@ const Navbar = ({ activeSection, isMenuOpen, setIsMenuOpen }) => {
   const lastWindowWidth = useRef(window.innerWidth);
   const scrollTimeoutRef = useRef(null);
 
-  // Memoize scroll function to prevent unnecessary recreations
-  const scrollToSection = useCallback((sectionId, isInitial = false) => {
-    console.log(`Attempting to scroll to ${sectionId}`);
-
-    const isMobileView = window.innerWidth <= 768;
-
-    if (isMenuOpen && !isMobileView) {
-      setIsMenuOpen(false);
-      setTimeout(() => executeScroll(sectionId, isInitial), 300);
-    } else {
-      executeScroll(sectionId, isInitial);
-    }
-  }, [isMenuOpen, setIsMenuOpen]); // Add dependencies here
-
-  const executeScroll = useCallback((sectionId, isInitial) => {
+  // Memoized scroll function with proper dependencies
+  const executeScroll = useCallback((sectionId, isInitial = false) => {
     if (scrollTimeoutRef.current) {
       clearTimeout(scrollTimeoutRef.current);
     }
@@ -37,9 +24,8 @@ const Navbar = ({ activeSection, isMenuOpen, setIsMenuOpen }) => {
         }
 
         const navbar = document.querySelector('.navbar');
-        const navbarHeight = navbar ? navbar.offsetHeight : 0;
-        const sectionPosition = section.offsetTop;
-        const scrollPosition = sectionPosition - navbarHeight - 20;
+        const navbarHeight = navbar?.offsetHeight || 0;
+        const scrollPosition = section.offsetTop - navbarHeight - 20;
 
         window.scrollTo({
           top: scrollPosition,
@@ -52,26 +38,37 @@ const Navbar = ({ activeSection, isMenuOpen, setIsMenuOpen }) => {
           }, 500);
         }
       } catch (error) {
-        console.error('Error during scroll:', error);
+        console.error('Scroll error:', error);
       }
     }, 100);
   }, []);
 
+  // Memoized main scroll handler
+  const scrollToSection = useCallback((sectionId, isInitial = false) => {
+    const isMobileView = window.innerWidth <= 768;
+
+    if (isMenuOpen && !isMobileView) {
+      setIsMenuOpen(false);
+      setTimeout(() => executeScroll(sectionId, isInitial), 300);
+    } else {
+      executeScroll(sectionId, isInitial);
+    }
+  }, [isMenuOpen, setIsMenuOpen, executeScroll]);
+
+  // Setup and cleanup effects
   useEffect(() => {
     isMounted.current = true;
-    
+
+    // Handle initial hash routing
     const initialHash = window.location.hash.replace('#', '');
     if (initialHash) {
-      setTimeout(() => {
-        scrollToSection(initialHash, true);
-      }, 500);
+      setTimeout(() => scrollToSection(initialHash, true), 500);
     }
 
+    // Responsive menu handler
     const handleResize = () => {
-      if (window.innerWidth > 768 && lastWindowWidth.current <= 768) {
-        if (isMenuOpen) {
-          setIsMenuOpen(false);
-        }
+      if (window.innerWidth > 768 && lastWindowWidth.current <= 768 && isMenuOpen) {
+        setIsMenuOpen(false);
       }
       lastWindowWidth.current = window.innerWidth;
     };
@@ -85,12 +82,65 @@ const Navbar = ({ activeSection, isMenuOpen, setIsMenuOpen }) => {
         clearTimeout(scrollTimeoutRef.current);
       }
     };
-  }, [isMenuOpen, setIsMenuOpen, scrollToSection]); // Add scrollToSection to dependencies
+  }, [isMenuOpen, setIsMenuOpen, scrollToSection]);
 
-  // ... (rest of your JSX remains exactly the same)
+  // Navbar links data
+  const navItems = [
+    { id: 'home', label: 'Home' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'services', label: 'Services' },
+    { id: 'skills', label: 'Skills' },
+    { id: 'work', label: 'Work' },
+    { 
+      id: 'contact', 
+      label: 'Hire me',
+      icon: '/image/profile.png',
+      className: 'contact-button'
+    }
+  ];
+
   return (
     <nav className="navbar">
-      {/* Your existing JSX */}
+      <div className="navbar-container">
+        <div className="navbar-brand">
+          <span>SAM</span>
+          <span>RWANDA</span>
+        </div>
+        
+        <button 
+          className={`hamburger ${isMenuOpen ? 'open' : ''}`}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-expanded={isMenuOpen}
+          aria-label="Toggle navigation"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </button>
+        
+        <ul className={`navbar-links ${isMenuOpen ? 'open' : ''}`}>
+          {navItems.map((item) => (
+            <li 
+              key={item.id}
+              className={activeSection === item.id ? 'active' : ''}
+            >
+              <button 
+                onClick={() => scrollToSection(item.id)}
+                className={item.className}
+              >
+                {item.icon && (
+                  <img 
+                    src={item.icon} 
+                    alt="Profile" 
+                    className="contact-image" 
+                  />
+                )}
+                {item.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </nav>
   );
 };
