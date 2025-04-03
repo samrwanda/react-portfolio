@@ -9,14 +9,14 @@
   margin-top: 0;
   padding: 0;
   box-sizing: border-box;
-  overflow-y: auto;
+  
   }
   
   .hero-content {
     position: relative;
     z-index: 2;
     max-width: 1200px;
-    margin-top:150px;
+    margin-top:120px;
     padding: 0 40px;
   }
   
@@ -29,7 +29,7 @@
     font-size: 1.2rem;
     font-weight: 600;
     max-width: 800px;
-    margin-top: 50px;
+    margin-top: 30px;
   }
   
   .hero-scroll {
