@@ -92,13 +92,13 @@
   .hamburger.open span:nth-child(3) {
     transform: rotate(-45deg) translate(7px, -6px);
   }
-  #contact-button {
+  .contact-button {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 16px;
-    border: 1px solid #1a1919; /* Border color */
-    
+    padding: 5px 16px;
+    border: 1px solid #1a1919 !important; /* Border color */
+    width: 120px;
     background: transparent;
     color: #1a1919 ;
     display: flex;
@@ -107,22 +107,17 @@
     
   }
   
-  #contact-button:hover {
+  .contact-button:hover {
     background: rgba(230, 57, 70, 0.2);
     transition: none;
     
   }
   
-  #contact-image {
-    width: 50px;
-    height: 50px;
-    
-    object-fit: cover;
-    
-  }
   .contact-image {
     width: 30px;
     height: 30px;
     
-     /* Adds a border around the image */
+    object-fit: cover;
+    
   }
+  
