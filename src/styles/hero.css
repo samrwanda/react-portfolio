@@ -14,8 +14,8 @@
 .hero-content {
   position: relative;
   z-index: 2;
-  max-width: 1200px;
-  margin-top: 150px;
+  max-width: 750px;
+  margin-top: 80px;
   padding: 0 40px;
 }
 
