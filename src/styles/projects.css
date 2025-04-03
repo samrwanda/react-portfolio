@@ -44,7 +44,9 @@
     margin: 0 auto;
     padding: 0 40px;
   }
-  
+  .section-header-one{
+    margin-top: 100px;
+  }
   .project-info {
     flex: 1;
     padding-right: 60px;
