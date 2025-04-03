@@ -124,9 +124,10 @@ const Navbar = ({ activeSection, isMenuOpen, setIsMenuOpen }) => {
               key={item.id}
               className={activeSection === item.id ? 'active' : ''}
             >
-              <button 
-                onClick={() => scrollToSection(item.id)}
+              <a 
+                href={`#${item.id}`} 
                 className={item.className}
+                onClick={() => setIsMenuOpen(false)} // Close the menu on click
               >
                 {item.icon && (
                   <img 
@@ -136,7 +137,7 @@ const Navbar = ({ activeSection, isMenuOpen, setIsMenuOpen }) => {
                   />
                 )}
                 {item.label}
-              </button>
+              </a>
             </li>
           ))}
         </ul>

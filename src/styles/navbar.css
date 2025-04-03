@@ -120,4 +120,43 @@
     object-fit: cover;
     
   }
-  
+
+/* Style for navbar links */
+.navbar-links a {
+  text-decoration: none; /* Remove underline */
+  color: var(--primary-color); /* Set link color */
+  font-size: 1rem; /* Adjust font size */
+  font-weight: 500; /* Adjust font weight */
+  padding: 5px 10px; /* Add padding for spacing */
+  position: relative; /* For hover effect */
+  transition: color 0.3s ease; /* Smooth color transition */
+}
+
+/* Hover effect for navbar links */
+.navbar-links a:hover {
+  color: var(--accent-color); /* Change color on hover */
+}
+
+/* Active link styling */
+.navbar-links li.active a {
+  color: var(--accent-color); /* Highlight active link */
+  font-weight: 700; /* Make active link bold */
+}
+
+/* Underline effect on hover */
+.navbar-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--accent-color); /* Underline color */
+  transition: width 0.3s ease; /* Smooth underline animation */
+}
+
+/* Expand underline on hover */
+.navbar-links a:hover::after,
+.navbar-links li.active a::after {
+  width: 100%; /* Full underline width */
+}
