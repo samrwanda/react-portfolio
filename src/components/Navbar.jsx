@@ -3,40 +3,18 @@ import '../styles/animations.css';
 import '../styles/navbar.css';
 
 const Navbar = ({ activeSection, isMenuOpen, setIsMenuOpen }) => {
-  // Use a ref to track if component is mounted
   const isMounted = useRef(false);
-  let scrollTimeout;
+  const lastWindowWidth = useRef(window.innerWidth); // To track the last window width
 
-  useEffect(() => {
-    isMounted.current = true;
-    
-    // Handle initial hash routing if URL has a hash on load
-    const initialHash = window.location.hash.replace('#', '');
-    if (initialHash) {
-      setTimeout(() => {
-        scrollToSection(initialHash, true);
-      }, 500); // Longer delay on initial load
-    }
-    
-    const handleResize = () => {
-      if (window.innerWidth > 768 && isMenuOpen) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      isMounted.current = false;
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [isMenuOpen, setIsMenuOpen]);
-
-  // More reliable scroll function
+  // Modified scroll function to keep menu open on small devices
   const scrollToSection = (sectionId, isInitial = false) => {
     console.log(`Attempting to scroll to ${sectionId}`);
-    
-    // Close mobile menu first
-    if (isMenuOpen) {
+
+    // Check if we're on a small device (mobile)
+    const isMobileView = window.innerWidth <= 768;
+
+    // Only close mobile menu on larger screens
+    if (isMenuOpen && !isMobileView) {
       setIsMenuOpen(false);
       
       // Give a moment for the menu closing animation to complete
@@ -45,8 +23,9 @@ const Navbar = ({ activeSection, isMenuOpen, setIsMenuOpen }) => {
       executeScroll(sectionId, isInitial);
     }
   };
-  
+
   const executeScroll = (sectionId, isInitial) => {
+    let scrollTimeout;
     if (scrollTimeout) clearTimeout(scrollTimeout);
 
     scrollTimeout = setTimeout(() => {
@@ -81,6 +60,38 @@ const Navbar = ({ activeSection, isMenuOpen, setIsMenuOpen }) => {
       }
     }, 100); // Debounce delay
   };
+
+  useEffect(() => {
+    isMounted.current = true;
+    
+    // Handle initial hash routing if URL has a hash on load
+    const initialHash = window.location.hash.replace('#', '');
+    if (initialHash) {
+      setTimeout(() => {
+        scrollToSection(initialHash, true);
+      }, 500); // Longer delay on initial load
+    }
+
+    // handle window resize events
+    const handleResize = () => {
+      // We only close the menu when resizing from small to large screens
+      if (window.innerWidth > 768 && lastWindowWidth.current <= 768) {
+        // Only close the menu if it was previously open
+        if (isMenuOpen) {
+          setIsMenuOpen(false);
+        }
+      }
+
+      lastWindowWidth.current = window.innerWidth;
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      isMounted.current = false;
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [isMenuOpen, setIsMenuOpen]);
 
   return (
     <nav className="navbar">

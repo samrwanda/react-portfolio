@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { FaHtml5, FaCss3Alt, FaJs, FaReact, FaNodeJs } from 'react-icons/fa';
-import { SiExpress, SiPostgresql, SiFigma } from 'react-icons/si';
+import { SiPostgresql, SiFigma } from 'react-icons/si';  // Removed SiExpress import
 import '../styles/skills.css';
 
 const Skills = ({ id }) => {
